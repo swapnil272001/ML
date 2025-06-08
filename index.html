@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live GPS Tracker (Free)</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+    }
+    iframe {
+      width: 90%;
+      height: 80vh;
+      border: none;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Live GPS Tracker (Free View)</h2>
+  <div id="mapContainer">
+    <iframe id="gmap" src="" allowfullscreen></iframe>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB3RCIzOrKQoM6SZ8mlBPgLACpR8-v6qXk",
+      authDomain: "gps-data-58c9c.firebaseapp.com",
+      databaseURL: "https://gps-data-58c9c-default-rtdb.firebaseio.com",
+      projectId: "gps-data-58c9c",
+      storageBucket: "gps-data-58c9c.appspot.com",
+      messagingSenderId: "960370971288",
+      appId: "1:960370971288:web:2201188f205230e44c76ed"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const gpsRef = ref(db, "gpslocation");
+
+    const iframe = document.getElementById("gmap");
+
+    onValue(gpsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data && data.lat && data.lng) {
+        const mapUrl = `https://maps.google.com/maps?q=${data.lat},${data.lng}&z=15&output=embed`;
+        iframe.src = mapUrl;
+      }
+    });
+  </script>
+</body>
+</html>
